@@ -35,7 +35,8 @@
     ],
     "scheme": "countdownme",
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "publicPath": "/CountdownMe/"
     }
   }
 }
