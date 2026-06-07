@@ -10,12 +10,12 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEvents } from '../hooks/useEvents';
 import EmojiPicker from '../components/EmojiPicker';
+import DatePickerField from '../components/DatePickerField';
 import { COLORS, SPACING, FONT, RADIUS } from '../constants/theme';
 import {
   ALL_CATEGORIES,
@@ -37,8 +37,8 @@ export default function AddScreen() {
     d.setDate(d.getDate() + 30);
     return d;
   });
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(Platform.OS !== 'web');
+  const [showTimePicker, setShowTimePicker] = useState(Platform.OS !== 'web');
   const [emoji, setEmoji] = useState('🎂');
   const [category, setCategory] = useState<EventCategory>('birthday');
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
@@ -133,66 +133,49 @@ export default function AddScreen() {
 
         {/* Date */}
         <Text style={[styles.label, { marginTop: SPACING.md }]}>Date</Text>
-        <TouchableOpacity
-          style={styles.dateButton}
-          onPress={() => setShowDatePicker(true)}
-        >
-          <Text style={styles.dateButtonText}>
-            📅 {targetDate.toLocaleDateString(undefined, {
-              weekday: 'long',
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            })}
-          </Text>
-        </TouchableOpacity>
-
+        {Platform.OS !== 'web' && (
+          <TouchableOpacity
+            style={styles.dateButton}
+            onPress={() => setShowDatePicker(true)}
+          >
+            <Text style={styles.dateButtonText}>
+              📅 {targetDate.toLocaleDateString(undefined, {
+                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+              })}
+            </Text>
+          </TouchableOpacity>
+        )}
         {showDatePicker && (
-          <DateTimePicker
+          <DatePickerField
             value={targetDate}
             mode="date"
-            display={Platform.OS === 'ios' ? 'inline' : 'default'}
-            minimumDate={new Date()}
-            onChange={(_, date) => {
-              setShowDatePicker(Platform.OS === 'ios');
-              if (date) {
-                const merged = new Date(targetDate);
-                merged.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-                setTargetDate(merged);
-              }
+            onChange={(date) => {
+              setShowDatePicker(Platform.OS === 'web');
+              setTargetDate(date);
             }}
-            themeVariant="dark"
           />
         )}
 
         {/* Time */}
         <Text style={[styles.label, { marginTop: SPACING.md }]}>Time</Text>
-        <TouchableOpacity
-          style={styles.dateButton}
-          onPress={() => setShowTimePicker(true)}
-        >
-          <Text style={styles.dateButtonText}>
-            ⏰ {targetDate.toLocaleTimeString(undefined, {
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
-          </Text>
-        </TouchableOpacity>
-
+        {Platform.OS !== 'web' && (
+          <TouchableOpacity
+            style={styles.dateButton}
+            onPress={() => setShowTimePicker(true)}
+          >
+            <Text style={styles.dateButtonText}>
+              ⏰ {targetDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+            </Text>
+          </TouchableOpacity>
+        )}
         {showTimePicker && (
-          <DateTimePicker
+          <DatePickerField
             value={targetDate}
             mode="time"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={(_, time) => {
-              setShowTimePicker(Platform.OS === 'ios');
-              if (time) {
-                const merged = new Date(targetDate);
-                merged.setHours(time.getHours(), time.getMinutes(), 0, 0);
-                setTargetDate(merged);
-              }
+            onChange={(time) => {
+              setShowTimePicker(Platform.OS === 'web');
+              setTargetDate(time);
             }}
-            themeVariant="dark"
           />
         )}
 
