@@ -5,33 +5,26 @@
     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>CountdownMe</title>
-    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <script>
+      // Strip /CountdownMe prefix so expo-router sees routes starting at /
+      (function() {
+        var base = '/CountdownMe';
+        var path = window.location.pathname;
+        if (path.startsWith(base)) {
+          var newPath = path.slice(base.length) || '/';
+          window.history.replaceState(null, '', newPath + window.location.search + window.location.hash);
+        }
+      })();
+    </script>
     <style id="expo-reset">
-      /* These styles make the body full-height */
-      html,
-      body {
-        height: 100%;
-      }
-      /* These styles disable body scrolling if you are using <ScrollView> */
-      body {
-        overflow: hidden;
-      }
-      /* These styles make the root element full-height */
-      #root {
-        display: flex;
-        height: 100%;
-        flex: 1;
-      }
+      html, body { height: 100%; }
+      body { overflow: hidden; }
+      #root { display: flex; height: 100%; flex: 1; }
     </style>
   </head>
-
   <body>
-    <!-- Use static rendering with Expo Router to support running without JavaScript. -->
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <!-- The root element for your Expo app. -->
+    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-  <script src="/CountdownMe/_expo/static/js/web/entry-f83fff29dfe10e43fd8bb29d0ea88112.js" defer></script>
-</body>
+    <script src="/CountdownMe/_expo/static/js/web/entry-f83fff29dfe10e43fd8bb29d0ea88112.js" defer></script>
+  </body>
 </html>
